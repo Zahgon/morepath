@@ -29,11 +29,12 @@ from .request import Request
 
 
 def cached_key_lookup(key_lookup):
-    pass
+    return reg.DictCachingKeyLookup(key_lookup)
 
 
 def commit_if_needed(app):
-    pass
+    if not app.is_committed():
+        app.commit()
 
 
 def dispatch_method(*predicates, **kw):
@@ -526,9 +527,7 @@ class App(dectate.App):
                 # fall back on using class link app
                 variables = app._path_variables(obj)
                 if variables is not None:
-                    next_app = app._deferred_class_link_app(
-                        obj.__class__, variables
-                    )
+                    next_app = app._deferred_class_link_app(obj.__class__, variables)
             app = next_app
         return None, app
 
