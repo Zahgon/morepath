@@ -47,7 +47,7 @@ from .view import View, render_html, render_json, render_view
 
 
 def isbaseclass(a, b):
-    return issubclass(b, a)
+    pass
 
 
 class SettingAction(dectate.Action):
@@ -72,10 +72,10 @@ class SettingAction(dectate.Action):
         self.name = name
 
     def identifier(self, setting_registry):
-        return self.section, self.name
+        pass
 
     def perform(self, obj, setting_registry):
-        setting_registry.register_setting(self.section, self.name, obj)
+        pass
 
 
 class SettingValue:
@@ -106,12 +106,7 @@ class SettingSectionAction(dectate.Composite):
         self.section = section
 
     def actions(self, obj):
-        section = obj()
-        for name, value in section.items():
-            yield (
-                SettingAction(section=self.section, name=name),
-                SettingValue(value),
-            )
+        pass
 
 
 # XXX this allows predicate_fallback directives to be installed without
@@ -141,12 +136,10 @@ class PredicateFallbackAction(dectate.Action):
         self.func = func
 
     def identifier(self, predicate_registry):
-        return self.dispatch, self.func
+        pass
 
     def perform(self, obj, predicate_registry):
-        predicate_registry.register_predicate_fallback(
-            self.dispatch, self.func, obj
-        )
+        pass
 
 
 class PredicateAction(dectate.Action):
@@ -197,18 +190,10 @@ class PredicateAction(dectate.Action):
         self._after = after
 
     def identifier(self, predicate_registry):
-        return self.dispatch, self._before, self._after
+        pass
 
     def perform(self, obj, predicate_registry):
-        predicate_registry.register_predicate(
-            obj,
-            self.dispatch,
-            self.name,
-            self.default,
-            self.index,
-            self._before,
-            self._after,
-        )
+        pass
 
     @staticmethod
     def after(predicate_registry):
@@ -221,7 +206,7 @@ class MethodAction(dectate.Action):
     depends = [SettingAction, PredicateAction, PredicateFallbackAction]
 
     def filter_get_value(self, name):
-        return self.key_dict.get(name, dectate.NOT_FOUND)
+        pass
 
     app_class_arg = True
 
@@ -257,15 +242,10 @@ class MethodAction(dectate.Action):
         self.key_dict = kw
 
     def identifier(self, app_class):
-        return (
-            self.dispatch_method,
-            self.dispatch_method.by_predicates(**self.key_dict).key,
-        )
+        pass
 
     def perform(self, obj, app_class):
-        getattr(app_class, self.dispatch_method.__name__).register(
-            obj, **self.key_dict
-        )
+        pass
 
 
 class ConverterAction(dectate.Action):
@@ -292,10 +272,10 @@ class ConverterAction(dectate.Action):
         self.type = type
 
     def identifier(self, converter_registry):
-        return ("converter", self.type)
+        pass
 
     def perform(self, obj, converter_registry):
-        converter_registry.register_converter(self.type, obj())
+        pass
 
 
 class PathAction(dectate.Action):
@@ -329,23 +309,13 @@ class PathAction(dectate.Action):
         self.absorb = absorb
 
     def identifier(self, path_registry):
-        return ("path", Path(self.path).discriminator())
+        pass
 
     def discriminators(self, path_registry):
-        return [("model", self.model)]
+        pass
 
     def perform(self, obj, path_registry):
-        path_registry.register_path(
-            self.model,
-            self.path,
-            self.variables,
-            self.converters,
-            self.required,
-            self.get_converters,
-            self.absorb,
-            self.code_info,
-            obj,
-        )
+        pass
 
 
 class PathCompositeAction(dectate.Composite):
@@ -420,27 +390,7 @@ class PathCompositeAction(dectate.Composite):
         # class and still have the path action discriminator work
         # correctly, which reports a conflict if you use the path
         # action with the same model multiple times.
-        model = self.model
-        if isinstance(obj, type):
-            if model is not None:
-                raise dectate.DirectiveError(
-                    "@path decorates class so cannot "
-                    "have explicit model: %s" % model
-                )
-            model = obj
-        if model is None:
-            raise dectate.DirectiveError(
-                "@path does not decorate class and has no explicit model"
-            )
-        yield PathAction(
-            self.path,
-            model,
-            self.variables,
-            self.converters,
-            self.required,
-            self.get_converters,
-            self.absorb,
-        ), obj
+        pass
 
 
 class PermissionRuleAction(dectate.Action):
@@ -486,15 +436,10 @@ class PermissionRuleAction(dectate.Action):
         self.identity = identity
 
     def identifier(self, app_class):
-        return (self.model, self.permission, self.identity)
+        pass
 
     def perform(self, obj, app_class):
-        app_class._permits.register(
-            methodify(obj, selfname="app"),
-            identity=self.identity,
-            obj=self.model,
-            permission=self.permission,
-        )
+        pass
 
 
 template_directory_id = 0
@@ -547,24 +492,10 @@ class TemplateDirectoryAction(dectate.Action):
         self.name = name
 
     def identifier(self, template_engine_registry):
-        return self.name
+        pass
 
     def perform(self, obj, template_engine_registry):
-        directory = obj()
-        if not os.path.isabs(directory):
-            directory = os.path.join(
-                os.path.dirname(self.code_info.path), directory
-            )
-        # hacky to have to get configurable and pass it in.
-        # note that this cannot be app_class as we want the app of
-        # the directive that *defined* it so we sort things properly.
-        template_engine_registry.register_template_directory_info(
-            obj,
-            directory,
-            self._before,
-            self._after,
-            self.directive.configurable,
-        )
+        pass
 
 
 class TemplateLoaderAction(dectate.Action):
@@ -586,10 +517,10 @@ class TemplateLoaderAction(dectate.Action):
         self.extension = extension
 
     def identifier(self, template_engine_registry):
-        return self.extension
+        pass
 
     def perform(self, obj, template_engine_registry):
-        template_engine_registry.initialize_template_loader(self.extension, obj)
+        pass
 
 
 class TemplateRenderAction(dectate.Action):
@@ -614,16 +545,14 @@ class TemplateRenderAction(dectate.Action):
         self.extension = extension
 
     def identifier(self, template_engine_registry):
-        return self.extension
+        pass
 
     def perform(self, obj, template_engine_registry):
-        template_engine_registry.register_template_render(self.extension, obj)
+        pass
 
 
 def issubclass_or_none(a, b):
-    if a is None or b is None:
-        return a == b
-    return issubclass(a, b)
+    pass
 
 
 class ViewAction(dectate.Action):
@@ -642,7 +571,7 @@ class ViewAction(dectate.Action):
     }
 
     def filter_get_value(self, name):
-        return self.predicates.get(name, dectate.NOT_FOUND)
+        pass
 
     filter_compare = {
         "model": isbaseclass,
@@ -725,28 +654,13 @@ class ViewAction(dectate.Action):
     def key_dict(self):
         """Return a dict containing view registration info,
         for instance model, request_method, etc."""
-        result = self.predicates.copy()
-        result["model"] = self.model
-        return result
+        pass
 
     def identifier(self, template_engine_registry, app_class):
-        return app_class.get_view.by_predicates(**self.key_dict()).key
+        pass
 
     def perform(self, obj, template_engine_registry, app_class):
-        render = self.render
-        if self.template is not None:
-            render = template_engine_registry.get_template_render(
-                self.template, render
-            )
-        v = View(
-            obj,
-            render,
-            self.load,
-            self.permission,
-            self.internal,
-            self.code_info,
-        )
-        app_class.get_view.register(v, **self.key_dict())
+        pass
 
 
 class JsonAction(ViewAction):
@@ -934,20 +848,10 @@ class MountAction(PathAction):
         self.app = app
 
     def discriminators(self, path_registry):
-        return [("mount", self.app)]
+        pass
 
     def perform(self, obj, path_registry):
-        path_registry.register_mount(
-            self.app,
-            self.path,
-            self.variables,
-            self.converters,
-            self.required,
-            self.get_converters,
-            self.name,
-            self.code_info,
-            obj,
-        )
+        pass
 
 
 class DeferLinksAction(dectate.Action):
@@ -982,13 +886,13 @@ class DeferLinksAction(dectate.Action):
         self.model = model
 
     def identifier(self, path_registry):
-        return ("defer_links", self.model)
+        pass
 
     def discriminators(self, path_registry):
-        return [("model", self.model)]
+        pass
 
     def perform(self, obj, path_registry):
-        path_registry.register_defer_links(self.model, obj)
+        pass
 
 
 class DeferClassLinksAction(dectate.Action):
@@ -1033,15 +937,13 @@ class DeferClassLinksAction(dectate.Action):
     def identifier(self, path_registry):
         # either implement defer_links for a model or implement
         # defer_class_links but not both
-        return ("defer_links", self.model)
+        pass
 
     def discriminators(self, path_registry):
-        return [("model", self.model)]
+        pass
 
     def perform(self, obj, path_registry):
-        path_registry.register_defer_class_links(
-            self.model, self.variables, obj
-        )
+        pass
 
 
 tween_factory_id = 0
@@ -1091,12 +993,10 @@ class TweenFactoryAction(dectate.Action):
         self.name = name
 
     def identifier(self, tween_registry):
-        return self.name
+        pass
 
     def perform(self, obj, tween_registry):
-        tween_registry.register_tween_factory(
-            obj, over=self.over, under=self.under
-        )
+        pass
 
 
 class IdentityPolicyAction(dectate.Action):
@@ -1122,13 +1022,10 @@ class IdentityPolicyAction(dectate.Action):
         pass
 
     def identifier(self, setting_registry, app_class):
-        return ()
+        pass
 
     def perform(self, obj, setting_registry, app_class):
-        identity_policy = mapply(obj, settings=setting_registry)
-        app_class._identify = identity_policy.identify
-        app_class.remember_identity = identity_policy.remember
-        app_class.forget_identity = identity_policy.forget
+        pass
 
 
 class VerifyIdentityAction(dectate.Action):
@@ -1167,12 +1064,10 @@ class VerifyIdentityAction(dectate.Action):
         self.identity = identity
 
     def identifier(self, app_class):
-        return self.identity
+        pass
 
     def perform(self, obj, app_class):
-        app_class._verify_identity.register(
-            methodify(obj, selfname="app"), identity=self.identity
-        )
+        pass
 
 
 class DumpJsonAction(dectate.Action):
@@ -1201,12 +1096,10 @@ class DumpJsonAction(dectate.Action):
         self.model = model
 
     def identifier(self, app_class):
-        return self.model
+        pass
 
     def perform(self, obj, app_class):
-        app_class._dump_json.register(
-            methodify(obj, selfname="app"), obj=self.model
-        )
+        pass
 
 
 class LinkPrefixAction(dectate.Action):
@@ -1228,7 +1121,7 @@ class LinkPrefixAction(dectate.Action):
         pass
 
     def identifier(self, app_class):
-        return ()
+        pass
 
     def perform(self, obj, app_class):
-        app_class._link_prefix = methodify(obj, selfname="app")
+        pass

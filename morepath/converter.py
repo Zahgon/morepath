@@ -60,12 +60,11 @@ class Converter:
         :param value: Python value
         :return: List of strings with only a single entry
         """
-        return [self.single_encode(value)]
+        pass
 
     def is_missing(self, value):
         """True is a given value is the missing value."""
-        # a single value is missing if the list is empty
-        return value == []
+        pass
 
     def __eq__(self, other):
         if not isinstance(other, Converter):
@@ -110,13 +109,11 @@ class ListConverter:
         :param values: list of Python values.
         :return: List of strings.
         """
-        encode = self.converter.single_encode
-        return [encode(v) for v in values]
+        pass
 
     def is_missing(self, value):
         """True is a given value is the missing value."""
-        # a list value is never missing, even if the list is empty
-        return False
+        pass
 
     def __eq__(self, other):
         if not isinstance(other, ListConverter):
@@ -165,7 +162,7 @@ class ConverterRegistry:
           the converter.
         :param converter: a :class:`morepath.Converter` instance.
         """
-        self.get_converter.register(type=type)(lambda type: converter)
+        pass
 
     def actual_converter(self, spec):
         """Return an actual converter for a given spec.
@@ -175,22 +172,8 @@ class ConverterRegistry:
           converter; else, assume it is a converter and return it.
         :return: a :class:`morepath.Converter` instance.
         """
-        if isinstance(spec, list):
-            if len(spec) == 0:
-                spec = IDENTITY_CONVERTER
-            else:
-                spec = self.actual_converter(spec[0])
-            return ListConverter(spec)
-        if isinstance(spec, type):
-            return self.get_converter(spec)
-        return spec
+        pass
 
     def argument_and_explicit_converters(self, arguments, converters):
         """Use explict converters unless none supplied, then use default args."""
-        result = {
-            name: self.get_converter(type(value))
-            for name, value in arguments.items()
-        }
-        for name, conv in converters.items():
-            result[name] = self.actual_converter(conv)
-        return result
+        pass

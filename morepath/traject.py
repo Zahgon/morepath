@@ -81,8 +81,7 @@ class Step:
         Raises :class:`morepath.error.TrajectError` if there is a problem
         with the segment.
         """
-        self.validate_parts()
-        self.validate_variables()
+        pass
 
     def validate_parts(self):
         """Check whether all non-variable parts of the segment are valid.
@@ -90,10 +89,7 @@ class Step:
         Raises :class:`morepath.error.TrajectError` if there is a problem
         with the segment.
         """
-        # XXX should also check for valid URL characters
-        for part in self.parts:
-            if "{" in part or "}" in part:
-                raise TrajectError("invalid step: %s" % self.s)
+        pass
 
     def validate_variables(self):
         """Check whether all variables of the segment are valid.
@@ -101,14 +97,7 @@ class Step:
         Raises :class:`morepath.error.TrajectError` if there is a problem
         with the variables.
         """
-        parts = self.parts
-        if parts[0] == "":
-            parts = parts[1:]
-        if parts[-1] == "":
-            parts = parts[:-1]
-        for part in parts:
-            if part == "":
-                raise TrajectError("illegal consecutive variables: %s" % self.s)
+        pass
 
     def discriminator_info(self):
         """Information needed to construct path discriminator."""
@@ -279,17 +268,14 @@ class Path:
 
         Used for link generation (inverse).
         """
-        return "/".join([step.named_interpolation_str for step in self.steps])
+        pass
 
     def variables(self):
         """Get the variables used by the path.
 
         :return: a list of variable names
         """
-        result = []
-        for step in self.steps:
-            result.extend(step.names)
-        return set(result)
+        pass
 
 
 class TrajectRegistry:
@@ -323,38 +309,7 @@ class TrajectRegistry:
           the code line that registered this path.
 
         """
-        node = self._root
-        known_variables = set()
-        for segment in parse_path(path):
-            step = Step(segment, converters)
-            node = node.add(step)
-            variables = set(step.names)
-            if known_variables.intersection(variables):
-                raise TrajectError("Duplicate variables")
-            known_variables.update(variables)
-        if defaults or converters or required or extra:
-            parameter_factory = ParameterFactory(
-                defaults, converters, required, extra
-            )
-        else:
-            parameter_factory = _simple_parameter_factory
-
-        model_args = set(arginfo(model_factory).args)
-        wants_request = "request" in model_args
-        wants_app = "app" in model_args
-
-        def create(path_variables, request):
-            variables = parameter_factory(request)
-            if wants_request:
-                variables["request"] = request
-            if wants_app:
-                variables["app"] = request.app
-            request.path_code_info = code_info
-            variables.update(path_variables)
-            return model_factory(**variables)
-
-        node.create = create
-        node.absorb = absorb
+        pass
 
     def consume(self, request):
         """Consume a stack given route, returning object.
@@ -461,7 +416,7 @@ class ParameterFactory:
 
 
 def _simple_parameter_factory(request):
-    return {}
+    pass
 
 
 def create_path(segments):
@@ -561,11 +516,7 @@ def create_variables_re(s):
     :param s: a route segment with variables in it.
     :return: a regular expression that matches with variables for the route.
     """
-
-    def _repl(m):
-        return "(?P<%s>.+)" % m.group(0)[1:-1]
-
-    return re.compile("^" + PATH_VARIABLE.sub(_repl, s) + "$")
+    pass
 
 
 def generalize_variables(s):
@@ -574,7 +525,7 @@ def generalize_variables(s):
     :param s: a route segment.
     :return: a generalized route where all variables are empty ({}).
     """
-    return PATH_VARIABLE.sub("{}", s)
+    pass
 
 
 def interpolation_str(s):
@@ -582,4 +533,4 @@ def interpolation_str(s):
 
     Given ``a{foo}b``, creates ``a%sb``.
     """
-    return PATH_VARIABLE.sub("%s", s)
+    pass

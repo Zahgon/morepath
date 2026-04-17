@@ -12,10 +12,7 @@ def make_parser(prog, default_host, default_port):
     import argparse
 
     def unsigned_short(s):
-        v = int(s)
-        if not 0 <= v <= 65536:
-            raise ValueError
-        return v
+        pass
 
     unsigned_short.__name__ = "integer in 0..65535"
 

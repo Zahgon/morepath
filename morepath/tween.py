@@ -31,7 +31,7 @@ class TweenRegistry:
         :under: the ``under`` factory wraps the tween created by this one
           (possibly indirectly).
         """
-        self._tween_infos.append(Info(tween_factory, over, under))
+        pass
 
     def sorted_tween_factories(self):
         """Sort tween factories topologically by over and under.

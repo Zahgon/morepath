@@ -29,12 +29,11 @@ from .request import Request
 
 
 def cached_key_lookup(key_lookup):
-    return reg.DictCachingKeyLookup(key_lookup)
+    pass
 
 
 def commit_if_needed(app):
-    if not app.is_committed():
-        app.commit()
+    pass
 
 
 def dispatch_method(*predicates, **kw):
@@ -169,15 +168,12 @@ class App(dectate.App):
         Includes this app itself as the first ancestor, all the way
         up to the root app in the mount chain.
         """
-        app = self
-        while app is not None:
-            yield app
-            app = app.parent
+        pass
 
     @reify
     def root(self):
         """The root application."""
-        return list(self.ancestors())[-1]
+        pass
 
     def child(self, app, **variables):
         """Get app mounted in this app.
@@ -191,23 +187,7 @@ class App(dectate.App):
         attribute set to this app object, or ``None`` if this
         application cannot be mounted in this one.
         """
-        if isinstance(app, App):
-            result = app
-            # XXX assert that variables is empty
-
-            # XXX do we need to deal with subclasses of apps?
-            if app.__class__ not in self.config.path_registry.mounted:
-                return None
-        else:
-            if isinstance(app, str):
-                factory = self.config.path_registry.named_mounted.get(app)
-            else:
-                factory = self.config.path_registry.mounted.get(app)
-            if factory is None:
-                return None
-            result = factory(**variables)
-        result.parent = self
-        return result
+        pass
 
     def sibling(self, app, **variables):
         """Get app mounted next to this app.
@@ -221,15 +201,12 @@ class App(dectate.App):
         attribute set to the same parent as this one, or ``None`` if such
         a sibling application does not exist.
         """
-        parent = self.parent
-        if parent is None:
-            return None
-        return parent.child(app, **variables)
+        pass
 
     @property
     def settings(self):
         """Returns the settings bound to this app."""
-        return self.config.setting_registry
+        pass
 
     @classmethod
     def mounted_app_classes(cls, callback=None):
@@ -281,12 +258,7 @@ class App(dectate.App):
         :param settings: a dictionary of setting sections which contain
           dictionaries of settings.
         """
-
-        def set_setting_section(section, section_settings):
-            cls.setting_section(section)(lambda: section_settings)
-
-        for section, section_settings in settings.items():
-            set_setting_section(section, section_settings)
+        pass
 
     @dispatch_method()
     def get_view(self, obj, request):
@@ -321,7 +293,7 @@ class App(dectate.App):
         :return: ``True`` if identity can be verified. By default no identity
         can be verified so this returns ``False``.
         """
-        return False
+        pass
 
     @dispatch_method("identity", "obj", reg.match_class("permission"))
     def _permits(self, identity, obj, permission):
@@ -336,7 +308,7 @@ class App(dectate.App):
         :param permission: permission class.
         :return: ``True`` if identity has permission for obj.
         """
-        return False
+        pass
 
     @dispatch_method("obj")
     def _dump_json(self, obj, request):
@@ -358,7 +330,7 @@ class App(dectate.App):
         :param request: :class:`morepath.Request`
         :return: prefix string to add before links.
         """
-        return request.application_url
+        pass
 
     @dispatch_method(reg.match_class("model"))
     def _class_path(self, model, variables):
@@ -419,7 +391,7 @@ class App(dectate.App):
 
     @classmethod
     def clean(cls):
-        reg.clean_dispatch_methods(cls)
+        pass
 
     def _identify(self, request):
         """Determine identity for request.
@@ -429,7 +401,7 @@ class App(dectate.App):
         no identity can be found. Can also return :data:`morepath.NO_IDENTITY`,
         but ``None`` is converted automatically to this.
         """
-        return None
+        pass
 
     def remember_identity(self, response, request, identity):
         """Modify response so that identity is remembered by client.
@@ -513,11 +485,7 @@ class App(dectate.App):
         :meth:`morepath.App.defer_class_links` directives into
         account.
         """
-
-        def find(app, obj):
-            return app._get_mounted_path(obj)
-
-        return self._follow_defers(find, obj)
+        pass
 
     def _get_deferred_mounted_class_path(self, model, variables):
         """Path for model and variables taking into account deferring apps.
@@ -526,12 +494,7 @@ class App(dectate.App):
         :meth:`morepath.App.defer_class_links` directive into
         account.
         """
-
-        def find(app, model, variables):
-            return app._get_mounted_class_path(model, variables)
-
-        info, app = self._follow_class_defers(find, model, variables)
-        return info
+        pass
 
     def _follow_defers(self, find, obj):
         """Resolve to deferring app and find something.
@@ -585,14 +548,4 @@ class App(dectate.App):
         :return: a tuple with the thing found (or ``None``) and the app in
           which it was found.
         """
-        seen = set()
-        app = self
-        while app is not None:
-            if app in seen:
-                raise LinkError("Circular defer. Cannot link to: %r" % model)
-            result = find(app, model, variables)
-            if result is not None:
-                return result, app
-            seen.add(app)
-            app = app._deferred_class_link_app(model, variables)
-        return None, app
+        pass

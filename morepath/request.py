@@ -61,12 +61,7 @@ class Request(BaseRequest):
         processing started. This is used by ``more.transaction`` when it
         retries a transaction.
         """
-        self.make_body_seekable()
-        segments = parse_path(self.path_info)
-        segments.reverse()
-        self.unconsumed = segments
-        self.app = self._root_app
-        self._after = []
+        pass
 
     @reify
     def identity(self):
@@ -82,12 +77,7 @@ class Request(BaseRequest):
         The identity can be used for authentication/authorization of
         the user, using Morepath permission directives.
         """
-        result = self.app._identify(self)
-        if result is None or result is NO_IDENTITY:
-            return NO_IDENTITY
-        if not self.app._verify_identity(result):
-            return NO_IDENTITY
-        return result
+        pass
 
     def link_prefix(self, app=None):
         """Prefix to all links created by this request.
@@ -97,15 +87,7 @@ class Request(BaseRequest):
             This parameter is mainly used internally for link creation.
 
         """
-        app = app or self.app
-
-        cached = self._link_prefix_cache.get(app.__class__)
-        if cached is not None:
-            return cached
-
-        prefix = self._link_prefix_cache[app.__class__] = app._link_prefix(self)
-
-        return prefix
+        pass
 
     def view(self, obj, default=None, app=SAME_APP, **predicates):
         """Call view for model instance.
@@ -177,21 +159,7 @@ class Request(BaseRequest):
           in the current application.
 
         """
-        if obj is None:
-            return default
-
-        if app is None:
-            raise LinkError("Cannot link: app is None")
-
-        if app is SAME_APP:
-            app = self.app
-
-        info, app = app._get_deferred_mounted_path(obj)
-
-        if info is None:
-            raise LinkError("Cannot link to: %r" % obj)
-
-        return info.url(self.link_prefix(app), name)
+        pass
 
     def class_link(self, model, variables=None, name="", app=SAME_APP):
         """Create a link (URL) to a view on a class.
@@ -231,21 +199,7 @@ class Request(BaseRequest):
           in the current application.
 
         """
-        if variables is None:
-            variables = {}
-
-        if app is None:
-            raise LinkError("Cannot link: app is None")
-
-        if app is SAME_APP:
-            app = self.app
-
-        info = app._get_deferred_mounted_class_path(model, variables)
-
-        if info is None:
-            raise LinkError("Cannot link to class: %r" % model)
-
-        return info.url(self.link_prefix(), name)
+        pass
 
     def resolve_path(self, path, app=SAME_APP):
         """Resolve a path to a model instance.
@@ -259,17 +213,7 @@ class Request(BaseRequest):
           current application.
         :return: instance or ``None`` if no path could be resolved.
         """
-        if app is None:
-            raise LinkError("Cannot path: app is None")
-
-        if app is SAME_APP:
-            app = self.app
-
-        request = Request(self.environ.copy(), app, path_info=path)
-        # try to resolve imports..
-        from .publish import resolve_model
-
-        return resolve_model(request)
+        pass
 
     def after(self, func):
         """Call a function with the response after a successful request.
@@ -314,17 +258,10 @@ class Request(BaseRequest):
 
     def _run_after(self, response):
         """Run callbacks registered with :meth:`morepath.Request.after`."""
-        # if we don't have anything to run, don't even check status
-        if not self._after:
-            return
-        # run after only if it's not a 2XX or 3XX response
-        if response.status[0] not in ("2", "3"):
-            return
-        for after in self._after:
-            after(response)
+        pass
 
     def clear_after(self):
-        self._after = []
+        pass
 
 
 class Response(BaseResponse):

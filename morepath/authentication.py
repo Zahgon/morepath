@@ -58,10 +58,7 @@ class Identity:
 
         :return: dict with identity info.
         """
-        result = {"userid": self.userid}
-        for name in self._names:
-            result[name] = getattr(self, name)
-        return result
+        pass
 
 
 class IdentityPolicy(metaclass=abc.ABCMeta):

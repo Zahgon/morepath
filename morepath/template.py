@@ -46,12 +46,7 @@ class TemplateEngineRegistry:
           registered this template directory. Used for implicit
           sorting by app inheritance.
         """
-        self._template_directory_infos.append(
-            TemplateDirectoryInfo(key, directory, before, after, configurable)
-        )
-        self._template_configurable_to_keys.setdefault(configurable, []).append(
-            key
-        )
+        pass
 
     def register_template_render(self, extension, func):
         """Register way to get a view render function for a file extension.
@@ -63,7 +58,7 @@ class TemplateEngineRegistry:
         :param func: function that given loader, name and original_renderer
           constructs a view ``render`` function.
         """
-        self._template_renders[extension] = func
+        pass
 
     def initialize_template_loader(self, extension, func):
         """Initialize a template loader for an extension.
@@ -74,9 +69,7 @@ class TemplateEngineRegistry:
         :param func: function that given a list of template directories
           returns a load object that be used to load the template for use.
         """
-        self._template_loaders[extension] = func(
-            self.sorted_template_directories(), self._setting_registry
-        )
+        pass
 
     def sorted_template_directories(self):
         """Get sorted template directories.
@@ -87,26 +80,7 @@ class TemplateEngineRegistry:
 
         :return: a list of template directory paths in the right order
         """
-        # make sure that template directories defined in subclasses
-        # override those in base classes
-        for info in self._template_directory_infos:
-            extra_before = []
-            for base in info.configurable.extends:
-                extra_before.extend(
-                    self._template_configurable_to_keys.get(base, [])
-                )
-            info.before.extend(extra_before)
-        try:
-            return [
-                info.directory
-                for info in toposorted(self._template_directory_infos)
-            ]
-        except TopologicalSortError:
-            raise ConfigError(
-                "Cannot sort template directories as dependency graph has "
-                "cycles. Could be because explicit dependencies conflict with "
-                "application inheritance."
-            )
+        pass
 
     def get_template_render(self, name, original_render):
         """Get a template render function.
@@ -118,18 +92,7 @@ class TemplateEngineRegistry:
         :return: a ``render`` function that uses the template to render
           the result of a view function.
         """
-        _, extension = os.path.splitext(name)
-        loader = self._template_loaders.get(extension)
-        if loader is None:
-            raise ConfigError(
-                "No template_loader configured for extension: %s" % extension
-            )
-        get_render = self._template_renders.get(extension)
-        if get_render is None:
-            raise ConfigError(
-                "No template_render configured for extension: %s" % extension
-            )
-        return get_render(loader, name, original_render)
+        pass
 
 
 class TemplateDirectoryInfo(Info):

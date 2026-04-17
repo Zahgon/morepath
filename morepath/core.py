@@ -104,41 +104,41 @@ def method_not_allowed(self, obj, request):
 @App.converter(type=int)
 def int_converter():
     """Converter for int."""
-    return Converter(int)
+    pass
 
 
 @App.converter(type=str)
 def unicode_converter():
     """Converter for text."""
-    return IDENTITY_CONVERTER
+    pass
 
 
 def date_decode(s):
-    return date.fromtimestamp(mktime(strptime(s, "%Y%m%d")))
+    pass
 
 
 def date_encode(d):
-    return d.strftime("%Y%m%d")
+    pass
 
 
 @App.converter(type=date)
 def date_converter():
     """Converter for date."""
-    return Converter(date_decode, date_encode)
+    pass
 
 
 def datetime_decode(s):
-    return datetime.fromtimestamp(mktime(strptime(s, "%Y%m%dT%H%M%S")))
+    pass
 
 
 def datetime_encode(d):
-    return d.strftime("%Y%m%dT%H%M%S")
+    pass
 
 
 @App.converter(type=datetime)
 def datetime_converter():
     """Converter for datetime."""
-    return Converter(datetime_decode, datetime_encode)
+    pass
 
 
 @App.tween_factory()
@@ -151,29 +151,7 @@ def excview_tween_factory(app, handler):
     If no view can be found, raise it all the way up -- this will be a
     500 internal server error and an exception logged.
     """
-
-    def excview_tween(request):
-        try:
-            response = handler(request)
-        except Exception as exc:
-            # we must use component_by_keys here because we
-            # do not want the request to feature in the lookup;
-            # we don't want its request method or name to influence
-            # exception lookup
-            view = request.app.get_view.by_predicates(
-                model=exc.__class__
-            ).component
-            if view is None:
-                raise
-
-            # we don't want to run any after already set in the exception view
-            if not isinstance(exc, (HTTPOk, HTTPRedirection)):
-                request.clear_after()
-
-            return view(app, exc, request)
-        return response
-
-    return excview_tween
+    pass
 
 
 @App.tween_factory(over=excview_tween_factory)
@@ -190,17 +168,7 @@ def poisoned_host_header_protection_tween_factory(app, handler):
     * https://github.com/django/django/commit/77b06e41516d8136b56c040cba7e235b
 
     """
-    valid_host_re = re.compile(
-        r"^([a-z0-9.\-_]+|\[[a-f0-9]*:[a-f0-9:]+\])(:\d+)?$"
-    )
-
-    def poisoned_host_header_protection_tween(request):
-        if not valid_host_re.match(request.host.lower()):
-            return HTTPBadRequest("Invalid HOST header")
-
-        return handler(request)
-
-    return poisoned_host_header_protection_tween
+    pass
 
 
 @App.view(model=HTTPException)
@@ -209,5 +177,4 @@ def standard_exception_view(self, request):
 
     Applies to subclasses of :class:`webob.HTTPException`.
     """
-    # webob HTTPException is a response already
-    return self
+    pass

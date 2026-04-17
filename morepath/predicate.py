@@ -46,8 +46,7 @@ class PredicateRegistry:
         :param before: predicate function to have priority over.
         :param after: predicate function that has priority over this one.
         """
-        info = PredicateInfo(func, name, default, index, before, after)
-        self._predicate_infos[dispatch].append(info)
+        pass
 
     def register_predicate_fallback(self, dispatch, func, fallback_func):
         """Register a predicate fallback for installation into reg registry.
@@ -58,7 +57,7 @@ class PredicateRegistry:
         :param func: the predicate function to register fallback for.
         :param fallback_func: the fallback function.
         """
-        self._predicate_fallbacks[dispatch][func] = fallback_func
+        pass
 
     def install_predicates(self):
         """Install the predicates with reg.
@@ -112,7 +111,7 @@ class PredicateRegistry:
 
 def adapt(func):
     def wrapper(d):
-        return func(**d)
+        pass
 
     return wrapper
 

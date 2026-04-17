@@ -38,9 +38,4 @@ class Info:
 
 
 def _convert_before_after(keys):
-    if isinstance(keys, (list, tuple)):
-        return list(keys)
-    elif keys is None:
-        return []
-    else:
-        return [keys]
+    pass

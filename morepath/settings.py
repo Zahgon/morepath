@@ -25,11 +25,7 @@ class SettingRegistry:
         :param func: function that when called without arguments
           creates the setting value.
         """
-        section = getattr(self, section_name, None)
-        if section is None:
-            section = SettingSection()
-            setattr(self, section_name, section)
-        setattr(section, setting_name, func())
+        pass
 
 
 class SettingSection:
